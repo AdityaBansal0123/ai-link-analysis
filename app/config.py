@@ -48,6 +48,13 @@ class Settings(BaseSettings):
             return v.lower() in ("true", "1", "yes", "on", "debug", "dev")
         return False
 
+    @field_validator("GEMINI_MODEL", mode="before")
+    @classmethod
+    def sanitize_gemini_model(cls, v):
+        if not v or v in ("gemini-2.0-flash", "models/gemini-2.0-flash"):
+            return "gemini-3.8-flash"
+        return v
+
     def get_effective_provider(self) -> str:
         """Determines the effective provider based on configured API keys."""
         if self.LLM_PROVIDER == "gemini" and self.GEMINI_API_KEY:
