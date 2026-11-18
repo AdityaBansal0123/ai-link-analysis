@@ -5,6 +5,7 @@
 [![License](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
 [![Docker](https://img.shields.io/badge/Docker-Ready-2496ED.svg?logo=docker&logoColor=white)](Dockerfile)
 [![Tests](https://img.shields.io/badge/Tests-14%20Passed-brightgreen.svg)]()
+[![Deploy to Render](https://render.com/images/deploy-to-render-button.svg)](https://render.com/deploy?repo=https://github.com/AdityaBansal0123/ai-link-analysis)
 
 An enterprise-grade, high-performance REST API built with **FastAPI** that fetches, sanitizes, and evaluates any given website URL using state-of-the-art **Large Language Models (Google Gemini, OpenAI GPT, Anthropic Claude)** to deliver multi-dimensional business, competitor, SEO, and audience intelligence.
 
