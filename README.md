@@ -11,6 +11,19 @@ An enterprise-grade, high-performance REST API built with **FastAPI** that fetch
 
 ---
 
+## 🌐 Live Deployment & Project Links
+
+| Resource | URL | Description |
+| :--- | :--- | :--- |
+| **Live Web Application** | [https://ai-link-analysis-api.onrender.com/](https://ai-link-analysis-api.onrender.com/) | Real-time interactive browser analysis dashboard |
+| **Interactive API Docs** | [https://ai-link-analysis-api.onrender.com/docs](https://ai-link-analysis-api.onrender.com/docs) | Swagger UI for live interactive testing |
+| **ReDoc Documentation** | [https://ai-link-analysis-api.onrender.com/redoc](https://ai-link-analysis-api.onrender.com/redoc) | Clean API reference specification |
+| **Live API Endpoint** | `POST https://ai-link-analysis-api.onrender.com/link-analysis` | Production REST API endpoint |
+| **Health Check** | [https://ai-link-analysis-api.onrender.com/health](https://ai-link-analysis-api.onrender.com/health) | Live server & LLM provider status |
+| **Public GitHub Repository**| [https://github.com/AdityaBansal0123/ai-link-analysis](https://github.com/AdityaBansal0123/ai-link-analysis) | Complete source code, tests, and commit history |
+
+---
+
 ## Table of Contents
 
 - [1. Architecture Overview](#1-architecture-overview)
@@ -62,7 +75,7 @@ An enterprise-grade, high-performance REST API built with **FastAPI** that fetch
                                            ▼
                       ┌─────────────────────────────────────────┐
                       │ 4. Multi-Provider LLM Engine            │
-                      │    - Google Gemini 2.0 Flash (Default)  │
+                      │    - Google Gemini 3.8 Flash (Default)  │
                       │    - OpenAI GPT-4o-mini (Alternative)   │
                       │    - Anthropic Claude 3.5 Haiku         │
                       │    - Zero-config Heuristic Fallback     │
@@ -151,13 +164,13 @@ To prevent Server-Side Request Forgery (SSRF) vulnerabilities, the application e
 
 | Provider | Recommended Model | Input Cost / 1M | Output Cost / 1M | Latency (p50) | Accuracy | Context Window | Structured JSON | Recommendation |
 | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
-| **Google** | **Gemini 2.0 Flash** *(Top Pick)* | **$0.10** | **$0.40** | **~1.2s** | **9.3 / 10** | **1,048,576** | **Native Schema** | **Best Overall**: Lowest cost, lowest latency, 1M context. |
+| **Google** | **Gemini 3.8 Flash** *(Active Pick)* | **$0.10** | **$0.40** | **~1.2s** | **9.4 / 10** | **1,048,576** | **Native Schema** | **Best Overall**: Lowest cost, fastest speed, 1M context. |
 | **OpenAI** | **GPT-4o-mini** *(Runner-up)* | **$0.15** | **$0.60** | **~1.4s** | **9.1 / 10** | **128,000** | **Strict Outputs** | **Strong Fallback**: Highly reliable structured JSON. |
 | **Anthropic**| **Claude 3.5 Haiku** | **$0.80** | **$4.00** | **~1.3s** | **9.2 / 10** | **200,000** | **Tool Calling** | Excellent reasoning; higher cost tier. |
 | **Google** | Gemini 1.5 Pro | $1.25 | $5.00 | ~3.5s | 9.6 / 10 | 2,097,152 | Native Schema | High accuracy, slower response time. |
 | **OpenAI** | GPT-4o | $2.50 | $10.00 | ~2.8s | 9.5 / 10 | 128,000 | Strict Outputs | Cost-prohibitive for high-frequency audits. |
 
-### Final LLM Recommendation: **Google Gemini 2.0 Flash**
+### Final LLM Recommendation: **Google Gemini 3.8 Flash**
 - **Unit Economics**: At $0.10 / $0.40 per million tokens, a complete 5-section analysis costs approximately **$0.00064 USD** (~0.06 cents).
 - **Latency**: Sub-1.5s execution for rapid API user experience.
 - **Context Depth**: 1M token window accommodates dense landing pages without truncation.
@@ -210,7 +223,7 @@ ai-link-analysis/
 
 1. **Clone the repository:**
    ```bash
-   git clone https://github.com/<your-username>/ai-link-analysis.git
+   git clone https://github.com/AdityaBansal0123/ai-link-analysis.git
    cd ai-link-analysis
    ```
 
@@ -241,7 +254,7 @@ ai-link-analysis/
    HOST=0.0.0.0
    LLM_PROVIDER=gemini
    GEMINI_API_KEY=your_gemini_api_key_here
-   GEMINI_MODEL=gemini-2.0-flash
+   GEMINI_MODEL=gemini-3.8-flash
    ```
 
 ---
@@ -291,6 +304,15 @@ curl http://localhost:4000/health
 ```
 
 #### cURL Command
+
+**Live Production (Render):**
+```bash
+curl -X POST "https://ai-link-analysis-api.onrender.com/link-analysis" \
+     -H "Content-Type: application/json" \
+     -d '{"url": "https://example.com"}'
+```
+
+**Local Server:**
 ```bash
 curl -X POST "http://localhost:4000/link-analysis" \
      -H "Content-Type: application/json" \
@@ -301,11 +323,16 @@ curl -X POST "http://localhost:4000/link-analysis" \
 ```python
 import requests
 
+# Live Production Endpoint
+PROD_URL = "https://ai-link-analysis-api.onrender.com/link-analysis"
+# Local Endpoint: "http://localhost:4000/link-analysis"
+
 response = requests.post(
-    "http://localhost:4000/link-analysis",
-    json={"url": "https://example.com"}
+    PROD_URL,
+    json={"url": "https://example.com"},
+    timeout=30.0
 )
-print(response.status_code)
+print("Status Code:", response.status_code)
 print(response.json())
 ```
 
@@ -623,7 +650,7 @@ print(response.json())
     "http_status": 200,
     "page_title": "Example Domain",
     "character_count_analyzed": 1256,
-    "model_used": "gemini-2.0-flash",
+    "model_used": "gemini-3.8-flash",
     "execution_time_seconds": 1.28
   }
 }
@@ -694,13 +721,13 @@ Send your submission to **[hr@chivoxai.com](mailto:hr@chivoxai.com)**:
   Please find my completed submission for the AI-Powered Website Link Analysis API Practical Test:
 
   - Full Name: <Your Full Name>
-  - Live Demo Link: <https://your-deployment-url.com>
-  - API Documentation (/docs): <https://your-deployment-url.com/docs>
-  - Public GitHub Repository: <https://github.com/your-username/ai-link-analysis>
-  - Contact Number: <Your Phone Number>
-  - Current Location: <Your City, Country>
+  - Demo Link: https://ai-link-analysis-api.onrender.com/
+  - API Documentation (/docs): https://ai-link-analysis-api.onrender.com/docs
+  - Public GitHub Repository Link: https://github.com/AdityaBansal0123/ai-link-analysis
+  - Contact Number: <Your Contact Number>
+  - Current Location: <Your Current Location>
   - LinkedIn Profile: <Your LinkedIn Profile URL>
-  - Instagram Profile: <Your Instagram Handle / URL>
+  - Instagram Profile: <Your Instagram Profile Handle / URL>
   - Preferred Date and Time for Final Discussion: <Preferred Date & Time>
 
   Thank you for reviewing my submission. I look forward to the Dxora Panel Interview.

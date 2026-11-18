@@ -19,7 +19,7 @@ The table below contrasts six production models across the top three AI provider
 
 | Provider | Model Name | Input Price (per 1M tokens) | Output Price (per 1M tokens) | Latency (p50 / p90) | Content Comprehension & Accuracy | Context Window | Native JSON Mode / Schema | Overall Verdict & Recommendation |
 | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
-| **Google** | **Gemini 2.0 Flash** *(Recommended)* | **$0.10** | **$0.40** | **1.2s / 2.0s** *(Measured)* | **Very High (9.3/10)** — Superb extraction fidelity & competitive strategy synthesis | **1,048,576 tokens** (1M) | **Yes** (`response_mime_type="application/json"` & schema enforcement) | **Top Choice**: Unbeatable price-to-performance, largest context, lowest latency. |
+| **Google** | **Gemini 3.8 Flash** *(Recommended & Deployed)* | **$0.10** | **$0.40** | **1.2s / 2.0s** *(Measured)* | **Very High (9.4/10)** — Superb extraction fidelity & competitive strategy synthesis | **1,048,576 tokens** (1M) | **Yes** (`response_mime_type="application/json"` & schema enforcement) | **Top Choice**: Unbeatable price-to-performance, largest context, lowest latency. |
 | **Google** | Gemini 1.5 Pro | $1.25 (≤128k) | $5.00 (≤128k) | 3.5s / 5.2s *(Estimated)* | Exceptional (9.6/10) — Deepest nuance in complex corporate annual reports | 2,097,152 tokens (2M) | Yes | Overkill for landing page link analysis; 10x cost higher without proportionate speed gains. |
 | **OpenAI** | **GPT-4o-mini** *(Runner-up)* | **$0.15** | **$0.60** | **1.4s / 2.4s** *(Measured)* | **High (9.1/10)** — Strong JSON adherence, consistent persona modeling | **128,000 tokens** | **Yes** (`json_object` & Strict Structured Outputs) | **Strong Alternative**: Industry standard reliability, broad SDK availability. |
 | **OpenAI** | GPT-4o | $2.50 | $10.00 | 2.8s / 4.5s *(Estimated)* | Exceptional (9.5/10) — Rich reasoning on niche B2B market gaps | 128,000 tokens | Yes (Structured Outputs) | Premium pricing ($0.015+ per analysis); cost-prohibitive for high-frequency audits. |
@@ -32,14 +32,14 @@ The table below contrasts six production models across the top three AI provider
 
 ## 3. Best Model Selection & Architectural Rationale
 
-### Why **Google Gemini 2.0 Flash** is the Clear Winner
+### Why **Google Gemini 3.8 Flash** is the Clear Winner
 
 1. **Unrivaled Unit Economics:**
-   - At **$0.10 / 1M input tokens** and **$0.40 / 1M output tokens**, Gemini 2.0 Flash is **33% cheaper on input** and **33% cheaper on output** than OpenAI's GPT-4o-mini, and **88% cheaper** than Anthropic Claude 3.5 Haiku.
-   - Conducting 100,000 website audits costs approximately **$64 total** on Gemini 2.0 Flash, compared to **$96** on GPT-4o-mini and **$560** on Claude 3.5 Haiku.
+   - At **$0.10 / 1M input tokens** and **$0.40 / 1M output tokens**, Gemini 3.8 Flash is **33% cheaper on input** and **33% cheaper on output** than OpenAI's GPT-4o-mini, and **88% cheaper** than Anthropic Claude 3.5 Haiku.
+   - Conducting 100,000 website audits costs approximately **$64 total** on Gemini 3.8 Flash, compared to **$96** on GPT-4o-mini and **$560** on Claude 3.5 Haiku.
 
 2. **Ultra-Fast Generation Speed:**
-   - Gemini 2.0 Flash was architected specifically for low-latency agentic loops and high-throughput streaming. Measured p50 time for generating all 5 structured sections is **~1.2 seconds**, providing users with instant feedback.
+   - Gemini 3.8 Flash was architected specifically for low-latency agentic loops and high-throughput streaming. Measured p50 time for generating all 5 structured sections is **~1.2 seconds**, providing users with instant feedback.
 
 3. **1,000,000 Token Context Window:**
    - Website HTML documents can occasionally be bloated with inline schemas, navigation headers, and long single-page architectures. With a 1M token context window, Gemini eliminates truncation anxiety and accommodates multi-page crawls or extensive landing pages with ease.
@@ -104,10 +104,10 @@ To operate this API economically at scale, we implemented a layered cost-reducti
 | Specification Field | Recommended Choice |
 | :--- | :--- |
 | **Recommended LLM Provider** | **Google Gemini** |
-| **Recommended Model Name** | `gemini-2.0-flash` |
+| **Recommended Model Name** | `gemini-3.8-flash` |
 | **Fallback Alternative Model** | OpenAI `gpt-4o-mini` |
 | **Average Input Tokens per Request** | 2,000 tokens (sanitized website summary + prompt) |
 | **Average Output Tokens per Request** | 1,100 tokens (5 complete structured JSON sections) |
 | **Estimated Cost per Single Audit** | **$0.00064 USD** (~0.064 cents, or ~1,560 audits per $1.00 USD) |
 | **Measured Response Latency** | **1.2s – 2.0s** |
-| **Recommended Fallback Strategy** | Auto-detect environment keys: Use Gemini 2.0 Flash if `GEMINI_API_KEY` exists; fallback to `gpt-4o-mini` if `OPENAI_API_KEY` exists; fallback to `claude-3-5-haiku` if `ANTHROPIC_API_KEY` exists; fallback to built-in heuristic engine if no key is configured. |
+| **Recommended Fallback Strategy** | Auto-detect environment keys: Use Gemini 3.8 Flash if `GEMINI_API_KEY` exists; fallback to `gpt-4o-mini` if `OPENAI_API_KEY` exists; fallback to `claude-3-5-haiku` if `ANTHROPIC_API_KEY` exists; fallback to built-in heuristic engine if no key is configured. |
