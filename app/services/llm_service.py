@@ -268,7 +268,7 @@ class BaseLLMService(abc.ABC):
 class GeminiLLMService(BaseLLMService):
     """Google Gemini implementation using official google-genai SDK."""
 
-    def __init__(self, api_key: str, model_name: str = "gemini-2.0-flash"):
+    def __init__(self, api_key: str, model_name: str = "gemini-3.8-flash"):
         from google import genai
         self.client = genai.Client(api_key=api_key)
         self.model_name = model_name
@@ -277,23 +277,40 @@ class GeminiLLMService(BaseLLMService):
         from google.genai import types
 
         prompt = build_analysis_prompt(content)
-        try:
-            config = types.GenerateContentConfig(
-                system_instruction=SYSTEM_PROMPT,
-                response_mime_type="application/json",
-                temperature=0.2,
-            )
-            response = await self.client.aio.models.generate_content(
-                model=self.model_name,
-                contents=prompt,
-                config=config,
-            )
-            cleaned = clean_json_text(response.text)
-            data = json.loads(cleaned)
-            return data
-        except Exception as e:
-            logger.error(f"Gemini API error: {e}", exc_info=True)
-            raise LLMServiceError(f"Gemini LLM error: {str(e)}")
+        candidate_models = [self.model_name]
+        for fallback in ["gemini-3.8-flash", "gemini-2.5-flash", "gemini-1.5-flash"]:
+            if fallback not in candidate_models:
+                candidate_models.append(fallback)
+
+        last_error = None
+        for model_to_try in candidate_models:
+            try:
+                config = types.GenerateContentConfig(
+                    system_instruction=SYSTEM_PROMPT,
+                    response_mime_type="application/json",
+                    temperature=0.2,
+                )
+                response = await self.client.aio.models.generate_content(
+                    model=model_to_try,
+                    contents=prompt,
+                    config=config,
+                )
+                self.model_name = model_to_try
+                cleaned = clean_json_text(response.text)
+                return json.loads(cleaned)
+            except Exception as e:
+                logger.warning(f"Gemini call to model '{model_to_try}' failed: {e}")
+                last_error = e
+                if "404" in str(e) or "NOT_FOUND" in str(e) or "not available" in str(e).lower():
+                    continue
+                break
+
+        if settings.ALLOW_MOCK_FALLBACK:
+            logger.warning(f"All Gemini model calls failed ({last_error}). Falling back to heuristic analysis engine.")
+            mock = MockLLMService()
+            return await mock.analyze_website(content)
+
+        raise LLMServiceError(f"Gemini LLM error: {str(last_error)}")
 
 
 class OpenAILLMService(BaseLLMService):
